@@ -62,13 +62,20 @@ for (var i = 0; i < getObjLength(data); i++) {
 	unselectedData.push(i);
 }
 
-while (unselectedData.length > 0) {
-	keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
-	unselectedData.pop(keyIndex);
-	console.log("keyIndex: " + keyIndex);
-	console.log("---------------------");
-	var key = Object.keys(data)[keyIndex];
-	console.log("Key (Question): " + key);
-	console.log("---------------------");
-	console.log("Array(1) (Correct Answer): " + data[key][1]);
-}
+// while (unselectedData.length > 0) {
+$("#test").on("click", function() {
+	if (!unselectedData.length == 0) {
+		keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
+		unselectedData.pop(keyIndex);
+		console.log("keyIndex: " + keyIndex);
+		console.log("---------------------");
+		var key = Object.keys(data)[keyIndex];
+		console.log("Key (Question): " + key);
+		console.log("---------------------");
+		console.log("Array(1) (Correct Answer): " + data[key][1]);
+		console.log("---------------------");
+		console.log("Array Length: " + unselectedData.length);
+		console.log("---------------------");
+		// }
+	}
+});
