@@ -43,6 +43,7 @@ var data = {
 };
 var keyIndex = -1;
 var unselectedData = [];
+var userSelectableResponseItems = []
 
 //Functions
 
@@ -56,28 +57,47 @@ function getObjLength(obj) {
 	return Object.keys(obj).length;
 }
 
+//This function returns the number of user selectable responses for a given question
+function getObjArrayLen(obj, objKey){
+    return obj[objKey].length
+}
+
 //populate unselectedData array
 //this will be used to track which questions have been asked
 for (var i = 0; i < getObjLength(data); i++) {
 	unselectedData.push(i);
 }
 
-// while (unselectedData.length > 0) {
+
 $("#test").on("click", function() {
 	if (!unselectedData.length == 0) {
 		keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
-		keyIndex = unselectedData.pop(keyIndex);
-		console.log("keyIndex: " + keyIndex);
-		console.log("---------------------");
+		keyIndex = unselectedData.splice(keyIndex,1);
 		var key_question = Object.keys(data)[keyIndex];
-        console.log("Key (Question): " + key_question);
         $("#question").text(key_question)
-		console.log("---------------------");
-		console.log("Array(1) (Correct Answer): " + data[key_question][1]);
-		console.log("---------------------");
-		console.log("Array Length: " + unselectedData.length);
-		console.log("---------------------");
-		// }
+
+
+
+        for (var i = 1; i < getObjArrayLen(data,key_question); i++){
+            userSelectableResponseItems[i-1]=data[key_question][i]
+        }
+        
+        var i = 0 
+        while(userSelectableResponseItems.length > 0){
+            var selectableResponse = getRandomNumberBetween(0,userSelectableResponseItems.length - 1);
+            selectableResponse = userSelectableResponseItems.splice(selectableResponse,1);
+            i++
+            $("label[for='" + $("#userOption-" + i).attr('id') + "']").text(selectableResponse)
+            
+        }
+
+
+
+
+        for (var i = 1; i < getObjArrayLen(data,key_question); i++){
+            // console.log(data[key_question][i])
+            // $("label[for='" + $("#userOption-" + i).attr('id') + "']").text(data[key_question][i])
+        }
     }
     else{//if unselectedData is empty. (All questions have been asked.)
         $("#question").fadeOut()
