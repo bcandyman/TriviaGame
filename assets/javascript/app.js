@@ -39,11 +39,18 @@ var data = {
 		"Jupiter",
 		"Earth"
 	],
-	"What is the symbol for potassium?": ["", "K", "Hg", "Fe", "Au"]
+	"What is the symbol for potassium?": ["", "K", "Hg", "Fe", "Au"],
+	"Which auto brand was the first to offer seat belts?": [
+		"",
+		"Nash Motors",
+		"Volkswagen",
+		"Ford"
+	],
+	"Adults have fewer bones than babies.": ["", "True", "False"]
 };
 var keyIndex = -1;
 var unselectedData = [];
-var userSelectableResponseItems = []
+var userSelectableResponseItems = [];
 
 //Functions
 
@@ -58,8 +65,8 @@ function getObjLength(obj) {
 }
 
 //This function returns the number of user selectable responses for a given question
-function getObjArrayLen(obj, objKey){
-    return obj[objKey].length
+function getObjArrayLen(obj, objKey) {
+	return obj[objKey].length;
 }
 
 //populate unselectedData array
@@ -68,38 +75,39 @@ for (var i = 0; i < getObjLength(data); i++) {
 	unselectedData.push(i);
 }
 
-
 $("#test").on("click", function() {
 	if (!unselectedData.length == 0) {
 		keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
-		keyIndex = unselectedData.splice(keyIndex,1);
+		keyIndex = unselectedData.splice(keyIndex, 1);
 		var key_question = Object.keys(data)[keyIndex];
-        $("#question").text(key_question)
+		$("#question").text(key_question);
 
+		for (var i = 1; i < getObjArrayLen(data, key_question); i++) {
+			userSelectableResponseItems[i - 1] = data[key_question][i];
+		}
 
+		var i = 0;
+		while (userSelectableResponseItems.length > 0) {
+			var selectableResponse = getRandomNumberBetween(
+				0,
+				userSelectableResponseItems.length - 1
+			);
+			selectableResponse = userSelectableResponseItems.splice(
+				selectableResponse,
+				1
+			);
+			i++;
+			$("label[for='" + $("#userOption-" + i).attr("id") + "']").text(
+				selectableResponse
+			);
+		}
 
-        for (var i = 1; i < getObjArrayLen(data,key_question); i++){
-            userSelectableResponseItems[i-1]=data[key_question][i]
-        }
-        
-        var i = 0 
-        while(userSelectableResponseItems.length > 0){
-            var selectableResponse = getRandomNumberBetween(0,userSelectableResponseItems.length - 1);
-            selectableResponse = userSelectableResponseItems.splice(selectableResponse,1);
-            i++
-            $("label[for='" + $("#userOption-" + i).attr('id') + "']").text(selectableResponse)
-            
-        }
-
-
-
-
-        for (var i = 1; i < getObjArrayLen(data,key_question); i++){
-            // console.log(data[key_question][i])
-            // $("label[for='" + $("#userOption-" + i).attr('id') + "']").text(data[key_question][i])
-        }
-    }
-    else{//if unselectedData is empty. (All questions have been asked.)
-        $("#question").fadeOut()
-    }
+		for (var i = 1; i < getObjArrayLen(data, key_question); i++) {
+			// console.log(data[key_question][i])
+			// $("label[for='" + $("#userOption-" + i).attr('id') + "']").text(data[key_question][i])
+		}
+	} else {
+		//if unselectedData is empty. (All questions have been asked.)
+		$("#question").fadeOut();
+	}
 });
