@@ -66,16 +66,20 @@ for (var i = 0; i < getObjLength(data); i++) {
 $("#test").on("click", function() {
 	if (!unselectedData.length == 0) {
 		keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
-		unselectedData.pop(keyIndex);
+		keyIndex = unselectedData.pop(keyIndex);
 		console.log("keyIndex: " + keyIndex);
 		console.log("---------------------");
-		var key = Object.keys(data)[keyIndex];
-		console.log("Key (Question): " + key);
+		var key_question = Object.keys(data)[keyIndex];
+        console.log("Key (Question): " + key_question);
+        $("#question").text(key_question)
 		console.log("---------------------");
-		console.log("Array(1) (Correct Answer): " + data[key][1]);
+		console.log("Array(1) (Correct Answer): " + data[key_question][1]);
 		console.log("---------------------");
 		console.log("Array Length: " + unselectedData.length);
 		console.log("---------------------");
 		// }
-	}
+    }
+    else{//if unselectedData is empty. (All questions have been asked.)
+        $("#question").fadeOut()
+    }
 });
