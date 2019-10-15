@@ -75,6 +75,8 @@ for (var i = 0; i < getObjLength(data); i++) {
 	unselectedData.push(i);
 }
 
+$()
+
 $("#test").on("click", function() {
 	if (!unselectedData.length == 0) {
 		keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
@@ -100,11 +102,6 @@ $("#test").on("click", function() {
 			$("label[for='" + $("#userOption-" + i).attr("id") + "']").text(
 				selectableResponse
 			);
-		}
-
-		for (var i = 1; i < getObjArrayLen(data, key_question); i++) {
-			// console.log(data[key_question][i])
-			// $("label[for='" + $("#userOption-" + i).attr('id') + "']").text(data[key_question][i])
 		}
 	} else {
 		//if unselectedData is empty. (All questions have been asked.)
