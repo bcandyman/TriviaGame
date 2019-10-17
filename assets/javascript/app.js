@@ -56,6 +56,7 @@ var unselectedData = [];
 var userSelectableResponseItems = [];
 var timer
 var timerActive = false;
+var userGaveResponse = false;
 
 //Functions
 
@@ -82,53 +83,40 @@ function resetRadioButtons(){
     $(".option-button").hide()
 }
 
-function resetTimer(){
-    if (timerActive === false){
-        // timerActive = true
-        // console.log("Timer Active" + timerActive)
-        // timer = setTimeout(function(){
-        //     timerActive=false
-        //     console.log("Timer Active" + timerActive)
-        //     console.log("Reconfiguring Form")
-        //     configureForm()
-        // },50000)
-    }
-}
-
-
-function configureForm(){
-        // if (timerActive === true){
-        //     clearTimeout(timer)
-        //     timerActive = false
-        
-        // }
-
-        // else{
-        //     resetTimer()
-        // }
-            
+function configureForm(){        
         resetRadioButtons()
         keyIndex = getRandomNumberBetween(0, unselectedData.length - 1); //randomly assigns an index value from unselectedData
         keyIndex = unselectedData.splice(keyIndex, 1); //Removed the selected item from unselectedData to keep from reasking a question
         key_question = Object.keys(data)[keyIndex];//Retrieve question using the keyIndex value
         $("#question").text(key_question);//Display the question
 
-        for (var i = 1; i < getObjArrayLen(data, key_question); i++) {//populate userSelecatableResponseItems. THis is needed when randomizing the user options
+        for (var i = 1; i < getObjArrayLen(data, key_question); i++) {//populate userSelecatableResponseItems. This is needed when randomizing the user options
             userSelectableResponseItems[i - 1] = data[key_question][i];
         }
 
         var i = 0;
-        while (userSelectableResponseItems.length > 0) {
+        while (userSelectableResponseItems.length > 0) {//This activates and populates user selectable radio buttons
             var selectableResponse = getRandomNumberBetween(0, userSelectableResponseItems.length - 1);
             selectableResponse = userSelectableResponseItems.splice(selectableResponse,	1);
             i++;
             $("label[for='" + $("#userOption-" + i).attr("id") + "']").text(selectableResponse);
             $("#userOption-" + i).show()
-            
-
         }
 
-        
+        timer=setTimeout(function(){//Activates the timer
+            if (userGaveResponse === false && timerActive === true){
+                console.log("Times Up")
+                configureForm()
+            }
+            else{
+                timerActive=false
+                console.log("timerActive: " + timerActive)
+            }
+        },50000)
+        timerActive=true
+        console.log("timerActive: " + timerActive)
+        userGaveResponse=false;
+        console.log("userGaveResponse: " + userGaveResponse)
     }
 
 
@@ -148,6 +136,9 @@ $("#test").on("click", function() {
 $(".option-button").on("click", function() {
     var userSelection = $("label[for='" + $("#" + this.id).attr("id") + "']").text()
     var correctAnswer = data[key_question][1]
+    userGaveResponse = true
+    console.log("userGaveResponse: " + userGaveResponse)
+    clearInterval(timer)
     if (userSelection === correctAnswer){
         correctAnswers++
     }
@@ -162,5 +153,4 @@ $(".option-button").on("click", function() {
         console.log("Correct: " + correctAnswers)
         console.log("Incorrect: " + incorrectAnswers)
     }
-
 })
