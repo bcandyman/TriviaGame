@@ -48,9 +48,14 @@ var data = {
 	],
 	"Adults have fewer bones than babies.": ["", "True", "False"]
 };
+var correctAnswers = 0;
+var incorrectAnswers = 0;
 var keyIndex = -1;
+var key_question = ""
 var unselectedData = [];
 var userSelectableResponseItems = [];
+var timer
+var timerActive = false;
 
 //Functions
 
@@ -69,42 +74,93 @@ function getObjArrayLen(obj, objKey) {
 	return obj[objKey].length;
 }
 
+function resetRadioButtons(){
+    for(var i = 1; i <= 4; i++){
+        $("label[for='" + $("#userOption-" + i).attr("id") + "']").text("")
+        $("#userOption-" + i).prop("checked",false)
+    }
+    $(".option-button").hide()
+}
+
+function resetTimer(){
+    if (timerActive === false){
+        // timerActive = true
+        // console.log("Timer Active" + timerActive)
+        // timer = setTimeout(function(){
+        //     timerActive=false
+        //     console.log("Timer Active" + timerActive)
+        //     console.log("Reconfiguring Form")
+        //     configureForm()
+        // },50000)
+    }
+}
+
+
+function configureForm(){
+        // if (timerActive === true){
+        //     clearTimeout(timer)
+        //     timerActive = false
+        
+        // }
+
+        // else{
+        //     resetTimer()
+        // }
+            
+        resetRadioButtons()
+        keyIndex = getRandomNumberBetween(0, unselectedData.length - 1); //randomly assigns an index value from unselectedData
+        keyIndex = unselectedData.splice(keyIndex, 1); //Removed the selected item from unselectedData to keep from reasking a question
+        key_question = Object.keys(data)[keyIndex];//Retrieve question using the keyIndex value
+        $("#question").text(key_question);//Display the question
+
+        for (var i = 1; i < getObjArrayLen(data, key_question); i++) {//populate userSelecatableResponseItems. THis is needed when randomizing the user options
+            userSelectableResponseItems[i - 1] = data[key_question][i];
+        }
+
+        var i = 0;
+        while (userSelectableResponseItems.length > 0) {
+            var selectableResponse = getRandomNumberBetween(0, userSelectableResponseItems.length - 1);
+            selectableResponse = userSelectableResponseItems.splice(selectableResponse,	1);
+            i++;
+            $("label[for='" + $("#userOption-" + i).attr("id") + "']").text(selectableResponse);
+            $("#userOption-" + i).show()
+            
+
+        }
+
+        
+    }
+
+
 //populate unselectedData array
 //this will be used to track which questions have been asked
 for (var i = 0; i < getObjLength(data); i++) {
 	unselectedData.push(i);
 }
 
-$()
+timerActive = false;
+resetRadioButtons()
 
 $("#test").on("click", function() {
-	if (!unselectedData.length == 0) {
-		keyIndex = getRandomNumberBetween(0, unselectedData.length - 1);
-		keyIndex = unselectedData.splice(keyIndex, 1);
-		var key_question = Object.keys(data)[keyIndex];
-		$("#question").text(key_question);
-
-		for (var i = 1; i < getObjArrayLen(data, key_question); i++) {
-			userSelectableResponseItems[i - 1] = data[key_question][i];
-		}
-
-		var i = 0;
-		while (userSelectableResponseItems.length > 0) {
-			var selectableResponse = getRandomNumberBetween(
-				0,
-				userSelectableResponseItems.length - 1
-			);
-			selectableResponse = userSelectableResponseItems.splice(
-				selectableResponse,
-				1
-			);
-			i++;
-			$("label[for='" + $("#userOption-" + i).attr("id") + "']").text(
-				selectableResponse
-			);
-		}
-	} else {
-		//if unselectedData is empty. (All questions have been asked.)
-		$("#question").fadeOut();
-	}
+    configureForm()
 });
+
+$(".option-button").on("click", function() {
+    var userSelection = $("label[for='" + $("#" + this.id).attr("id") + "']").text()
+    var correctAnswer = data[key_question][1]
+    if (userSelection === correctAnswer){
+        correctAnswers++
+    }
+    else{
+        incorrectAnswers++
+    }
+    if (!unselectedData.length == 0){
+        configureForm()
+    }
+    else{
+        $("#question").fadeOut()
+        console.log("Correct: " + correctAnswers)
+        console.log("Incorrect: " + incorrectAnswers)
+    }
+
+})
