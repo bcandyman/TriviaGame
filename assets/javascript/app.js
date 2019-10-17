@@ -105,20 +105,30 @@ function configureForm(){
 
         timer=setTimeout(function(){//Activates the timer
             if (userGaveResponse === false && timerActive === true){
+                incorrectAnswers++
                 console.log("Times Up")
-                configureForm()
+                displayImage()
             }
             else{
                 timerActive=false
                 console.log("timerActive: " + timerActive)
             }
-        },50000)
+        },10000)
         timerActive=true
         console.log("timerActive: " + timerActive)
         userGaveResponse=false;
         console.log("userGaveResponse: " + userGaveResponse)
     }
 
+
+    function displayImage(){
+        $(".testImg").show()
+        setTimeout(function(){
+            $(".testImg").hide()
+            configureForm()
+        },2000)
+    }
+    
 
 //populate unselectedData array
 //this will be used to track which questions have been asked
@@ -128,10 +138,13 @@ for (var i = 0; i < getObjLength(data); i++) {
 
 timerActive = false;
 resetRadioButtons()
+$(".testImg").hide()
 
-$("#test").on("click", function() {
+
+$("#beginGame").on("click", function() {
     configureForm()
 });
+
 
 $(".option-button").on("click", function() {
     var userSelection = $("label[for='" + $("#" + this.id).attr("id") + "']").text()
@@ -139,6 +152,9 @@ $(".option-button").on("click", function() {
     userGaveResponse = true
     console.log("userGaveResponse: " + userGaveResponse)
     clearInterval(timer)
+
+    
+
     if (userSelection === correctAnswer){
         correctAnswers++
     }
@@ -146,10 +162,12 @@ $(".option-button").on("click", function() {
         incorrectAnswers++
     }
     if (!unselectedData.length == 0){
-        configureForm()
+        displayImage()
+        // configureForm()
     }
     else{
         $("#question").fadeOut()
+        resetRadioButtons()
         console.log("Correct: " + correctAnswers)
         console.log("Incorrect: " + incorrectAnswers)
     }
