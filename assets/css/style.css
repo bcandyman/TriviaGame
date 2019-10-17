@@ -1,0 +1,39 @@
+body{
+    background-image: url("../images/fancy-pants.jpg");
+    color: #ddd;
+}
+
+header{
+    background-color: #2E2D35;
+    border-bottom: 2px solid #ddd;
+    box-shadow: 5px 10px 8px 10px black;
+    height: 80px;
+    padding: 0px;
+}
+
+.container{
+    max-width: 960px;
+}
+
+.content-body{
+    background-color: #777;
+    height: 500px;
+}
+
+.header-title{
+    height: 80px;
+    padding: 15px;
+    position: absolute;
+    top: 0;
+}
+
+.testImg{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.option-button-div{
+    width:24.5%;
+    display:inline-block;
+}
