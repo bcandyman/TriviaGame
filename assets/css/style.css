@@ -3,11 +3,20 @@ body{
     color: #ddd;
 }
 
+footer{
+    background-color: #2E2D35;
+    border-top: 2px solid #ddd;
+    box-shadow: 5px -10px 8px 10px black;
+    height: 80px;
+    margin-top  : 25px; 
+}
+
 header{
     background-color: #2E2D35;
     border-bottom: 2px solid #ddd;
     box-shadow: 5px 10px 8px 10px black;
     height: 80px;
+    margin-bottom: 20px;
     padding: 0px;
 }
 
@@ -17,6 +26,8 @@ header{
 
 .content-body{
     background-color: #777;
+    border: 2px solid greenyellow;
+    border-radius: 10px;
     height: 500px;
 }
 
@@ -27,13 +38,31 @@ header{
     top: 0;
 }
 
-.testImg{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .option-button-div{
     width:24.5%;
     display:inline-block;
 }
+
+.testImg{
+    height: 300px;
+    display: block;
+    margin: auto;
+}
+
+.imgDiv{
+    height: 300px;
+    background-color: black;
+}
+
+#question{
+    border-top: 1px solid greenyellow;
+    border-bottom: 1px solid greenyellow;
+    height: 70px;
+    padding:20px;
+}
+
+#response{
+    margin-top: 20px;
+}
+
+
