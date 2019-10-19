@@ -10,10 +10,9 @@ var timer;
 var timerActive = false;
 var userGaveResponse = false;
 var availableUserResponses = []
-
 var imgTimer;
 var imgTimerActive = false;
-var triviaURL = "https://opentdb.com/api.php?amount=10";
+var giphyAPIKey = "eSqZO6ojSUC2LlqL8j6ip1Yycn1xHueV"
 
 
 //Functions
@@ -36,16 +35,15 @@ function getObjArrayLen(obj, objKey) {
 
 function removeSpecialCharacters(str){
     var encodedStr = str;
-
     var parser = new DOMParser;
     var dom = parser.parseFromString(
         '<!doctype html><body>' + str,
         'text/html');
-    var decodedString = dom.body.textContent;
+    return dom.body.textContent;
 
-    console.log(decodedString);
+    // console.log(decodedString);
 
-    return decodedString
+    // return decodedString
 }
 
 
@@ -118,16 +116,14 @@ function configureForm() {
 
 
 function displayImage(answeredCorrect) {
-	var imageQueryURL1 = "http://api.giphy.com/v1/gifs/search?q=";
-	var imageQueryURLSearch = "";
-	var imageQueryURL2 = "&api_key=eSqZO6ojSUC2LlqL8j6ip1Yycn1xHueV";
+	var imgQueryURLSearch = "";
 
 	if (answeredCorrect) {
-		imageQueryURLSearch = "yay";
+		imgQueryURLSearch = "yay";
 	} else {
-		imageQueryURLSearch = "oh+no";
+		imgQueryURLSearch = "oh+no";
 	}
-	queryURL = imageQueryURL1 + imageQueryURLSearch + imageQueryURL2;
+	queryURL = "http://api.giphy.com/v1/gifs/search?q=" + imgQueryURLSearch + "&api_key="+ giphyAPIKey
 	$.ajax({
 		url: queryURL,
 		method: "GET"
@@ -155,7 +151,7 @@ function displayImage(answeredCorrect) {
 
 console.log("Hi there");
 $.ajax({
-    url: triviaURL,
+    url: "https://opentdb.com/api.php?amount=10",
     method: "GET"
 }).then(function(response) {
     console.log(response);
