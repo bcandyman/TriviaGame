@@ -48,43 +48,18 @@ var data = {
 	],
 	"Adults have fewer bones than babies.": ["", "True", "False"]
 };
-
-
-// var questionQueryURL = "https://opentdb.com/api.php?amount=10&difficulty=easy"
-
-
-
-// $.ajax({
-//     url: questionQueryURL,
-//     method: "GET"
-//   }).then(function(response) {
-//       var stringifiedResponse = JSON.stringify(response)
-//       console.log(stringifiedResponse)
-//     //  data = response
-//     //  console.log ("Data: " + data)
-//     //  for (var i = 0; i < getObjLength(data); i++) {
-//     //     unselectedData.push(i);
-//     // }
-//     console.log(unselectedData)
-
-//   });
-
-
-
-  
 var correctAnswers = 0;
 var incorrectAnswers = 0;
 var keyIndex = -1;
-var key_question = ""
+var key_question = "";
 var unselectedData = [];
 var userSelectableResponseItems = [];
-var timer
+var timer;
 var timerActive = false;
 var userGaveResponse = false;
 
-https://opentdb.com/api.php?amount=10&difficulty=easy
-
-// "api.openweathermap.org/data/2.5/weather?q=London,uk"  //"https://opentdb.com/api.php?amount=10" //"https://www.omdbapi.com/?t=" + movie + "&apikey=169a8751";
+var imgTimer;
+var imgTimerActive = false;
 
 
 //Functions
@@ -104,138 +79,144 @@ function getObjArrayLen(obj, objKey) {
 	return obj[objKey].length;
 }
 
-
-// function parseString(str){
-//     var parser = new DOMParser;
-//     var dom = parser.parseFromString(
-//         '<!doctype html><body>' + str,
-//         'text/html');
-//         return dom.body.textContent;  
-// }
-
-
-function configureForm(){        
-        // resetRadioButtons()
-        console.log(0)
-        keyIndex = getRandomNumberBetween(0, unselectedData.length - 1); //randomly assigns an index value from unselectedData
-        console.log(keyIndex)
-        keyIndex = unselectedData.splice(keyIndex, 1); //Removed the selected item from unselectedData to keep from reasking a question
-        console.log(keyIndex)
-        key_question = (data[keyIndex])
-        
-        console.log(data[keyIndex])
-        $("#question").text(key_question);//Display the question
-
-        for (var i = 1; i < getObjArrayLen(data, key_question); i++) {//populate userSelecatableResponseItems. This is needed when randomizing the user options
-            userSelectableResponseItems[i - 1] = data[key_question][i];
-        }
-
-        var i = 0;
-        while (userSelectableResponseItems.length > 0) {//This activates and populates user selectable radio buttons
-            var selectableResponse = getRandomNumberBetween(0, userSelectableResponseItems.length - 1);
-            selectableResponse = userSelectableResponseItems.splice(selectableResponse,	1);
-            i++;
-
-            $("#userOption-" + i).text(selectableResponse)
-            $("#userOption-" + i).show()
-        }
-
-        timer=setTimeout(function(){//Activates the timer
-            if (userGaveResponse === false && timerActive === true){
-                incorrectAnswers++
-                console.log("Times Up")
-                displayImage()
-            }
-            else{
-                timerActive=false
-                console.log("timerActive: " + timerActive)
-            }
-        },30000)
-        timerActive=true
-        console.log("timerActive: " + timerActive)
-        userGaveResponse=false;
-        console.log("userGaveResponse: " + userGaveResponse)
+function hideButtons(){
+    for (var i = 1; i <= 4; i++){
+        console.log("Hide" + i)
+        $("#userOption-" + i).hide();
     }
+}
 
+function configureForm() {
+    hideButtons()
+	keyIndex = getRandomNumberBetween(0, unselectedData.length - 1); //randomly assigns an index value from unselectedData
+	console.log(keyIndex);
+	keyIndex = unselectedData.splice(keyIndex, 1); //Removed the selected item from unselectedData to keep from reasking a question
+	key_question = Object.keys(data)[keyIndex];
 
-    function displayImage(answeredCorrect){
-        var imageQueryURL1 = "http://api.giphy.com/v1/gifs/search?q="
-        var imageQueryURLSearch = ""
-        var imageQueryURL2 = "&api_key=eSqZO6ojSUC2LlqL8j6ip1Yycn1xHueV"
+	console.log("key_question: " + key_question);
+	$("#question-text").text(key_question); //Display the question
 
-        if (answeredCorrect){
-            imageQueryURLSearch = "yay"
-        }
-        else{
-            imageQueryURLSearch = "oh+no"
-        }
-        queryURL = imageQueryURL1 + imageQueryURLSearch + imageQueryURL2
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-          }).then(function(response) {
-            //   console.log(response)
-            var imgUrl = response.data[getRandomNumberBetween(0,24)].images.original.url
-              console.log(imgUrl)
-              $(".testImg").attr("src",imgUrl) 
-              $(".testImg").show()
-          });
+	for (var i = 1; i < getObjArrayLen(data, key_question); i++) {
+		//populate userSelecatableResponseItems. This is needed when randomizing the user options
+		userSelectableResponseItems[i - 1] = data[key_question][i];
+	}
 
+	var i = 0;
+	while (userSelectableResponseItems.length > 0) {
+		//This activates and populates user selectable radio buttons
+		var selectableResponse = getRandomNumberBetween(
+			0,
+			userSelectableResponseItems.length - 1
+		);
+		selectableResponse = userSelectableResponseItems.splice(
+			selectableResponse,
+			1
+		);
+		i++;
 
-          
-        $(".testImg").show()
-        setTimeout(function(){
-            $(".testImg").hide()
-            $(".testImg").attr("src","") 
-            configureForm()
-        },5000)
-    }
-    
+		$("#userOption-" + i).text(selectableResponse);
+		$("#userOption-" + i).show();
+	}
+
+	timer = setTimeout(function() {
+		//Activates the timer
+		if (userGaveResponse === false && timerActive === true) {
+			incorrectAnswers++;
+			console.log("Times Up");
+			displayImage();
+		} else {
+			timerActive = false;
+			console.log("timerActive: " + timerActive);
+		}
+	}, 8000);
+	timerActive = true;
+	console.log("timerActive: " + timerActive);
+	userGaveResponse = false;
+	console.log("userGaveResponse: " + userGaveResponse);
+}
+
+function displayImage(answeredCorrect) {
+	var imageQueryURL1 = "http://api.giphy.com/v1/gifs/search?q=";
+	var imageQueryURLSearch = "";
+	var imageQueryURL2 = "&api_key=eSqZO6ojSUC2LlqL8j6ip1Yycn1xHueV";
+
+	if (answeredCorrect) {
+		imageQueryURLSearch = "yay";
+	} else {
+		imageQueryURLSearch = "oh+no";
+	}
+	queryURL = imageQueryURL1 + imageQueryURLSearch + imageQueryURL2;
+	$.ajax({
+		url: queryURL,
+		method: "GET"
+	}).then(function(response) {
+		//   console.log(response)
+		var imgUrl =
+			response.data[getRandomNumberBetween(0, 24)].images.original.url;
+		console.log(imgUrl);
+		$(".testImg").attr("src", imgUrl);
+		$(".testImg").show();
+	});
+
+	$(".testImg").show();
+	imgTimer=setTimeout(function() {
+        imgTimerActive=false;
+        console.log("imgTimerActive: " + imgTimerActive)
+		$(".testImg").hide();
+		$(".testImg").attr("src", "");
+		configureForm();
+    }, 5000);
+    imgTimerActive = true;
+    console.log("imgTimerActive: " + imgTimerActive)
+}
 
 // populate unselectedData array
 // this will be used to track which questions have been asked
 
-// for (var i = 0; i < getObjLength(data); i++) {
-// 	unselectedData.push(i);
-// }
+for (var i = 0; i < getObjLength(data); i++) {
+	unselectedData.push(i);
+}
 
-// console.log(unselectedData)
+console.log(unselectedData);
 
 timerActive = false;
-$(".testImg").hide()
-
+$(".testImg").hide();
 
 $("#beginGame").on("click", function() {
-    configureForm()
+	configureForm();
 });
 
-
 $(".option-button").on("click", function() {
-    console.log($("#" + this.id).text())
-    var userSelection = $("#" + this.id).text()
-    var correctAnswer = data[key_question][1]
-    var isUserAnswerCorrect = false
-    userGaveResponse = true
-    console.log("userGaveResponse: " + userGaveResponse)
-    clearInterval(timer)
+	// console.log($("#" + this.id).text());
+	var userSelection = $("#" + this.id).text();
+	var correctAnswer = data[key_question][1];
+	var isUserAnswerCorrect = false;
+	userGaveResponse = true;
+	// console.log("userGaveResponse: " + userGaveResponse);
+    clearTimeout(timer);
+    timerActive=false;
+    // clearTimeout(imgTimer)
+    // imgTimerActive=false;
+    console.log(imgTimerActive)
 
-    if (userSelection === correctAnswer){
-        isUserAnswerCorrect = true
-        correctAnswers++
-        console.log("correct answer")
+    if(imgTimerActive === false){
+
+	if (userSelection === correctAnswer) {
+		isUserAnswerCorrect = true;
+		correctAnswers++;
+		console.log("correct answer");
+	} else {
+		incorrectAnswers++;
+		console.log("incorrect answer");
+	}
+	if (!unselectedData.length == 0) {
+		displayImage(isUserAnswerCorrect);
+		// configureForm()
+	} else {
+		$("#question").fadeOut();
+		// resetRadioButtons()
+		console.log("Correct: " + correctAnswers);
+		console.log("Incorrect: " + incorrectAnswers);
     }
-    else{
-        incorrectAnswers++
-        console.log("incorrect answer")
-    }
-    if (!unselectedData.length == 0){
-        displayImage(isUserAnswerCorrect)
-        // configureForm()
-    }
-    else{
-        $("#question").fadeOut()
-        // resetRadioButtons()
-        console.log("Correct: " + correctAnswers)
-        console.log("Incorrect: " + incorrectAnswers)
-    }
-})
+}
+});
