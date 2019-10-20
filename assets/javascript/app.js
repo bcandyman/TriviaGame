@@ -13,6 +13,8 @@ var availableUserResponses = []
 var imgTimer;
 var imgTimerActive = false;
 var giphyAPIKey = "eSqZO6ojSUC2LlqL8j6ip1Yycn1xHueV"
+var isFlyOutActive = false;
+var categoryValue = 0
 
 
 //Functions
@@ -27,10 +29,13 @@ function getObjLength(obj) {
 	return Object.keys(obj).length;
 }
 
+
+
 //This function returns the number of user selectable responses for a given question
 function getObjArrayLen(obj, objKey) {
 	return obj[objKey].length;
 }
+
 
 
 function removeSpecialCharacters(str){
@@ -40,10 +45,6 @@ function removeSpecialCharacters(str){
         '<!doctype html><body>' + str,
         'text/html');
     return dom.body.textContent;
-
-    // console.log(decodedString);
-
-    // return decodedString
 }
 
 
@@ -106,7 +107,8 @@ function configureForm() {
 			timerActive = false;
 			console.log("timerActive: " + timerActive);
 		}
-	}, 8000);
+    }, 8000);
+    
 	timerActive = true;
 	console.log("timerActive: " + timerActive);
 	userGaveResponse = false;
@@ -142,16 +144,57 @@ function displayImage(answeredCorrect) {
         console.log("imgTimerActive: " + imgTimerActive)
 		$(".testImg").hide();
 		$(".testImg").attr("src", "");
-		configureForm();
+        configureForm();
+        closeFlyout()
     }, 5000);
     imgTimerActive = true;
     console.log("imgTimerActive: " + imgTimerActive)
 }
 
 
+
+function flyout(){
+    // event.stopPropagation()
+    if(!isFlyOutActive){
+        var flyoutDiv = $("<div>")
+        flyoutDiv.attr("id","flyout")
+        flyoutDiv.addClass("flyout")
+        flyoutDiv.html($("<H3>").text("Pick a category"))
+        flyoutDiv.append($("<hr />"))
+        // flyoutDiv.append($("<p>").text("Your Text"))
+        flyoutDiv.hide()
+        $(".content-body").append(flyoutDiv)
+        flyoutDiv.fadeIn()
+        isFlyOutActive = true;
+    }
+    else{
+        closeFlyout()
+    }
+}
+
+
+
+function closeFlyout(){
+    if (isFlyOutActive){
+        $("#flyout").fadeOut()
+        setTimeout(() => {
+            $("#flyout").remove()
+        }, 1000);
+        isFlyOutActive = false;
+    }
+}
+
+
+function getTriviaData(){
+
+    var queryURL = "https://opentdb.com/api.php?amount=10"
 console.log("Hi there");
+if(categoryValue !== 0){
+    queryURL = queryURL + "&category=" + categoryValue
+}
+console.log(queryURL)
 $.ajax({
-    url: "https://opentdb.com/api.php?amount=10",
+    url: queryURL,
     method: "GET"
 }).then(function(response) {
     console.log(response);
@@ -161,8 +204,9 @@ $.ajax({
     }
     console.log("unselectedData")
     console.log(unselectedData);
+    configureForm();
 });
-
+}
 // populate unselectedData array
 // this will be used to track which questions have been asked
 
@@ -171,11 +215,16 @@ $.ajax({
 timerActive = false;
 $(".testImg").hide();
 
-$("#beginGame").on("click", function() {
-	configureForm();
-});
+
+
+// $("#beginGame").on("click", function() {
+// 	configureForm();
+// });
+
+
 
 $(".option-button").on("click", function() {
+    // flyout()
 	// console.log($("#" + this.id).text());
 	var userSelection = $("#" + this.id).text();
 	var correctAnswer = data.results[keyIndex].correct_answer //data[key_question][1];
@@ -197,17 +246,104 @@ $(".option-button").on("click", function() {
 		console.log("correct answer");
 	} else {
         incorrectAnswers++;
-        $("#result").text("Oh no!")
+        $("#result").text("Correct answer was: " + correctAnswer)
 		console.log("incorrect answer");
 	}
 	if (!unselectedData.length == 0) {
 		displayImage(isUserAnswerCorrect);
 		// configureForm()
 	} else {
-		$("#question").fadeOut();
+        $("#question").fadeOut();
+        // flyout()
 		// resetRadioButtons()
 		console.log("Correct: " + correctAnswers);
 		console.log("Incorrect: " + incorrectAnswers);
     }
 }
 });
+
+
+
+
+
+
+
+
+
+startUp()
+
+
+
+function startUp(){
+    var categories = {
+        "Any":0,
+        "General Knowledge":9,
+        "Books":10,
+        "Film":11,
+        "Music":12,
+        "Musical & Theatres":13,
+        "Television":14,
+        "Video Games":15,
+        "Board Games":16,
+        "Science & Nature":17,
+        "Computers":18,
+        "Mathematics":19,
+        "Mythology":20,
+        "Sports":21,
+        "Geography":22,
+        "History":23,
+        "Politics":24,
+        "Art":25,
+        "Celebrities":26,
+        "Animals":27,
+        "Vehicles":28,
+        "Comics":29,
+        "Gadgets":30,
+        "Japanese Anime & Manga":31,
+        "Cartoon & Animations":32,
+    }
+    var categoryDiv = $("<div>")
+    categoryDiv.addClass("btn-group-vertical text-center")
+    categoryDiv.attr("role", "group")
+    flyout()
+
+    // <div class="btn-group text-center" role="group" aria-label="Basic example">
+    var rowDiv = $("<div>")
+    rowDiv.addClass("row")
+    
+    for ( var i = 1; i = 2; i++){
+
+    }
+
+
+    for ( var i = 1; i <= 25; i++){
+        var categoryKey = Object.keys(categories)[i - 1]
+        var btn = $("<button>")
+        btn.addClass("category btn btn-secondary option-button")
+        btn.attr("value", categories[categoryKey])
+        btn.text(categoryKey)
+        categoryDiv.append(btn)
+    }
+    $("#flyout").append(categoryDiv)
+}
+
+
+function setCategory(){
+// console.log(this)
+categoryValue =parseInt($(this).attr("value"))
+console.log(categoryValue)
+console.log($(this).attr("value"))
+closeFlyout()
+getTriviaData()
+}
+
+
+function buildStartMenu(){
+    
+}
+
+
+
+
+
+$(document).on("click", ".category", setCategory);
