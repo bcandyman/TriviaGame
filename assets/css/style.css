@@ -7,7 +7,7 @@ footer{
     background-color: #2E2D35;
     border-top: 2px solid #ddd;
     box-shadow: 5px -10px 8px 10px black;
-    height: 80px;
+    height: 100px;
     margin-top  : 25px; 
 }
 
@@ -31,6 +31,20 @@ header{
     border-radius: 10px;
     height: 500px;
     position: relative;
+}
+
+.flyout{
+    background-color: #777;
+    border-radius: 10px;
+    color:  #ddd;
+    position: relative;
+    max-width: 500px;
+    top: -400px;
+    z-index: 1;
+    border: 1px solid greenyellow;
+    padding: 10px;
+    margin: 0 auto;
+    box-shadow: 5px 10px 8px black;
 }
 
 .header-title{
@@ -70,24 +84,5 @@ header{
 #result{
     font-style: italic;
     margin-top: 15px;
-}
-
-
-
-
-
-
-.flyout{
-    background-color: #777;
-    border-radius: 10px;
-    color: #35A007;
-    position: relative;
-    /* max-width: 500px; */
-    top: -100px;
-    z-index: 1;
-    border: 1px solid;
-    padding: 10px;
-    margin: 0 auto;
-    box-shadow: 5px 10px 8px #888;
 }
 
