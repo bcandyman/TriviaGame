@@ -141,7 +141,7 @@ function displayImage(answeredCorrect) {
         imgQueryURLSearch = "oh+no";
     }
 
-    queryURL = "http://api.giphy.com/v1/gifs/search?q=" + imgQueryURLSearch + "&api_key=" + giphyAPIKey;
+    queryURL = "https://api.giphy.com/v1/gifs/search?q=" + imgQueryURLSearch + "&api_key=" + giphyAPIKey;
     
     $.ajax({
         url: queryURL,
